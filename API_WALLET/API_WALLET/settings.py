@@ -9,7 +9,9 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import time
+from datetime import datetime, date, time, timedelta
+from datetime import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    ' Wallet',
+    'Wallet',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist', 
+    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_swagger', 
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -101,8 +105,43 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+TEMPLATE_LOADERS = (
 
+'django.template.loaders.eggs.Loader',
 
+)
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+     #'rest_framework.authentication.SessionAuthentication',
+       # 'rest_framework.authentication.BasicAuthentication',
+    ),
+
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated',                 
+    ],
+    
+   'NON_FIELD_ERRORS_KEY': 'error',
+    
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+
+}
+SWAGGER_SETTINGS = {
+'SECURITY_DEFINITIONS': {
+ 'Bearer':{
+    'type':'apiKey',
+    'name':'Authorization',
+    'in':'header'
+  }
+ }
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -119,7 +158,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
+AUTH_USER_MODEL = 'Wallet.User'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
